@@ -1,0 +1,46 @@
+# AgentTrust Risk Rules Configuration — Strict Preset
+# Lower thresholds, more aggressive detection
+version: 1
+preset: strict
+
+engine:
+  riskThreshold: 4
+  maxActionsPerMinute: 15
+  sensitivePathPatterns:
+    - "^.*\\.ssh/"
+    - "^.*\\.env"
+    - "^.*credentials"
+    - "^.*\\.pem$"
+    - "^.*\\.key$"
+    - "^.*password"
+    - "^.*secret"
+    - "^.*token"
+    - "^.*keychain"
+    - "^.*vault"
+    - "^.*\\.gnupg/"
+    - "^.*\\.aws/"
+    - "^.*\\.kube/"
+    - "^.*\\.docker/"
+  sensitiveDomains:
+    - "stripe.com"
+    - "paypal.com"
+    - "plaid.com"
+    - "braintree.com"
+    - "square.com"
+    - "wise.com"
+
+rules:
+  fin-001: { enabled: true }
+  fin-002: { enabled: true }
+  cred-001: { enabled: true }
+  cred-002: { enabled: true }
+  cred-003: { enabled: true }
+  comm-001: { enabled: true }
+  comm-002: { enabled: true }
+  esc-001: { enabled: true }
+  esc-002: { enabled: true }
+  exfil-001: { enabled: true }
+  scope-001: { enabled: true }
+  freq-001: { enabled: true }
+  destr-001: { enabled: true }
+  destr-002: { enabled: true }

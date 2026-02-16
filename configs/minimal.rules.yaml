@@ -1,0 +1,39 @@
+# AgentTrust Risk Rules Configuration — Minimal Preset
+# Only financial, credential, and escalation rules enabled
+version: 1
+preset: minimal
+
+engine:
+  riskThreshold: 7
+  maxActionsPerMinute: 60
+  sensitivePathPatterns:
+    - "^.*\\.ssh/"
+    - "^.*\\.env"
+    - "^.*credentials"
+    - "^.*\\.pem$"
+    - "^.*\\.key$"
+    - "^.*password"
+    - "^.*secret"
+    - "^.*token"
+    - "^.*keychain"
+    - "^.*vault"
+  sensitiveDomains:
+    - "stripe.com"
+    - "paypal.com"
+    - "plaid.com"
+
+rules:
+  fin-001: { enabled: true }
+  fin-002: { enabled: true }
+  cred-001: { enabled: true }
+  cred-002: { enabled: true }
+  cred-003: { enabled: true }
+  comm-001: { enabled: false }
+  comm-002: { enabled: false }
+  esc-001: { enabled: true }
+  esc-002: { enabled: true }
+  exfil-001: { enabled: false }
+  scope-001: { enabled: false }
+  freq-001: { enabled: false }
+  destr-001: { enabled: false }
+  destr-002: { enabled: false }

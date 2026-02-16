@@ -1,0 +1,58 @@
+# AgentTrust Risk Rules Configuration — Custom Template
+#
+# Copy this file to your workspace:
+#   cp custom.rules.example.yaml ~/.openclaw/workspace/.agenttrust/rules.yaml
+#
+# Then reference it:
+#   agenttrust audit --config ~/.openclaw/workspace/.agenttrust/rules.yaml
+#
+version: 1
+preset: custom
+
+engine:
+  # Risk threshold for auto-flagging (0-10, default: 7)
+  riskThreshold: 7
+
+  # Maximum actions per minute before frequency alert (default: 30)
+  maxActionsPerMinute: 30
+
+  # Regex patterns for sensitive file paths
+  sensitivePathPatterns:
+    - "^.*\\.ssh/"
+    - "^.*\\.env"
+    - "^.*credentials"
+    - "^.*\\.pem$"
+    - "^.*\\.key$"
+    - "^.*password"
+    - "^.*secret"
+    - "^.*token"
+    - "^.*keychain"
+    - "^.*vault"
+    # Add your own patterns:
+    # - "^/etc/shadow"
+    # - "^.*\\.pgpass"
+
+  # Domains considered financial/sensitive
+  sensitiveDomains:
+    - "stripe.com"
+    - "paypal.com"
+    - "plaid.com"
+    # Add your own domains:
+    # - "internal-payment-api.example.com"
+
+# Enable or disable individual rules
+rules:
+  fin-001: { enabled: true }   # payment_detected
+  fin-002: { enabled: true }   # financial_api_call
+  cred-001: { enabled: true }  # ssh_key_access
+  cred-002: { enabled: true }  # env_secret_access
+  cred-003: { enabled: true }  # password_store_access
+  comm-001: { enabled: true }  # external_message_send
+  comm-002: { enabled: true }  # unknown_recipient
+  esc-001: { enabled: true }   # elevated_mode_used
+  esc-002: { enabled: true }   # sudo_command
+  exfil-001: { enabled: true } # sensitive_file_then_network
+  scope-001: { enabled: true } # action_outside_claim_scope
+  freq-001: { enabled: true }  # high_action_rate
+  destr-001: { enabled: true } # file_deletion
+  destr-002: { enabled: true } # recursive_delete
