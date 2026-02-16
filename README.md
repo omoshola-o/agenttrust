@@ -14,6 +14,10 @@ AgentTrust is an open-source trust and audit layer that sits **alongside** your 
 
 Built for **[OpenClaw](https://github.com/openclaw/openclaw)** first. Framework-agnostic by design.
 
+<p align="center">
+  <img src="assets/status-dashboard.svg" alt="AgentTrust Status Dashboard" width="680"/>
+</p>
+
 ## Table of Contents
 
 - [Installation](#installation)
@@ -204,13 +208,9 @@ All data is local JSONL — one JSON object per line. Files rotate daily.
 
 `agenttrust trust` produces a combined score from 0–100:
 
-```
-Trust Score: 87/100  ████████▊░  GOOD
-
-  Integrity     100/100  ██████████  All hash chains intact
-  Consistency    82/100  ████████░░  4 unfulfilled claims
-  Witness        79/100  ███████▉░  Minor unmatched activity
-```
+<p align="center">
+  <img src="assets/trust-verify.svg" alt="AgentTrust Trust Score and Verification" width="680"/>
+</p>
 
 The score drops when:
 - Hash chains are broken (integrity)
