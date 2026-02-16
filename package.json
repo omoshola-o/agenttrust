@@ -2,11 +2,18 @@
   "name": "agenttrust",
   "version": "0.1.0",
   "description": "Trust & audit layer for AI agents. Tamper-evident action logging for OpenClaw and beyond.",
-  "author": "Omoshola",
+  "author": {
+    "name": "Omoshola",
+    "url": "https://github.com/omoshola-o"
+  },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/omoshola-o/agenttrust"
+    "url": "git+https://github.com/omoshola-o/agenttrust.git"
+  },
+  "homepage": "https://github.com/omoshola-o/agenttrust#readme",
+  "bugs": {
+    "url": "https://github.com/omoshola-o/agenttrust/issues"
   },
   "keywords": [
     "ai-agent",
@@ -36,6 +43,8 @@
   "files": [
     "dist/",
     "skill/",
+    "configs/",
+    "assets/",
     "LICENSE",
     "README.md"
   ],
