@@ -176,6 +176,17 @@ export type {
   WitnessStorageConfig,
 } from "./witness/index.js";
 
+// Helpers (Agent Integration)
+export {
+  logAction,
+  declareIntent,
+  initWorkspace,
+  getDefaultLedger,
+  setDefaultLedger,
+  resetDefaultLedger,
+} from "./helpers.js";
+export type { LogActionInput, DeclareIntentInput } from "./helpers.js";
+
 // Correlation Engine (Layer 2.5)
 export {
   correlate,

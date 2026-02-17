@@ -22,6 +22,7 @@ Built for **[OpenClaw](https://github.com/openclaw/openclaw)** first. Framework-
 
 - [Installation](#installation)
 - [Quick Start](#quick-start)
+- [Agent Integration](#agent-integration)
 - [What It Does](#what-it-does)
 - [Architecture](#architecture)
 - [CLI Reference](#cli-reference)
@@ -91,6 +92,79 @@ agenttrust audit --flag-risky
 # Combined trust score from all verification engines
 agenttrust trust
 ```
+
+## Agent Integration
+
+### Install as a dependency
+
+```bash
+npm install agenttrust
+```
+
+### Log actions (one-liner)
+
+```ts
+import { initWorkspace, logAction } from "agenttrust";
+
+// Call once at startup
+await initWorkspace();
+
+// Log any agent action — 3 required fields, everything else has defaults
+await logAction({
+  type: "file.read",
+  target: "/etc/hosts",
+  detail: "Read hosts file for DNS lookup",
+});
+
+// Add optional context when needed
+await logAction({
+  type: "api.call",
+  target: "https://api.openai.com/v1/chat",
+  detail: "Called GPT-4 for summarization",
+  risk: 2,
+  riskLabels: ["communication"],
+  goal: "Summarize user document",
+  durationMs: 1340,
+  session: "ses_abc123",
+});
+```
+
+### Declare intent before acting
+
+```ts
+import { declareIntent, logAction } from "agenttrust";
+
+// Step 1: Declare what you plan to do
+const claim = await declareIntent({
+  type: "exec.command",
+  target: "npm install express",
+  goal: "Install HTTP framework for the user's project",
+});
+
+// Step 2: Do the work
+// ... your agent logic here ...
+
+// Step 3: Log what actually happened, linked to the claim
+await logAction({
+  type: "exec.command",
+  target: "npm install express",
+  detail: "Installed express v4.18.2",
+  meta: { claimId: claim.ok ? claim.value.id : undefined },
+});
+```
+
+### Verify and inspect
+
+```ts
+import { Ledger } from "agenttrust";
+
+const ledger = new Ledger();
+const integrity = await ledger.verify();     // Check hash chains
+const entries = await ledger.read();          // Read all actions
+const stats = await ledger.getStats();        // Get risk breakdown
+```
+
+See [`examples/basic-agent/`](examples/basic-agent/) for a full working example.
 
 ## What It Does
 
