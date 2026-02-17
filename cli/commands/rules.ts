@@ -45,8 +45,9 @@ export function registerRulesCommand(program: Command): void {
     .option("--preset <name>", "Use a specific preset (default/strict/minimal)")
     .option("--category <cat>", "Filter by category")
     .option("--json", "Output as JSON for scripting")
+    .option("-w, --workspace <path>", "Workspace path")
     .action(
-      (opts: { preset?: string; category?: string; json?: boolean }) => {
+      (opts: { preset?: string; category?: string; json?: boolean; workspace?: string }) => {
         let config = DEFAULT_CONFIG;
         if (opts.preset) {
           try {

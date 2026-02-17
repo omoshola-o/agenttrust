@@ -161,8 +161,24 @@ export function registerReplayCommand(program: Command): void {
           return;
         }
 
-        // Single entry blame analysis
-        const targetEntry = entries.find((e) => e.id === targetEntryId || e.id.startsWith(targetEntryId!));
+        // Single entry blame analysis — search executions first, then claims
+        let targetEntry = entries.find((e) => e.id === targetEntryId || e.id.startsWith(targetEntryId!));
+        let isClaim = false;
+        if (!targetEntry && claims) {
+          const matchedClaim = claims.find((c) => c.id === targetEntryId || c.id.startsWith(targetEntryId!));
+          if (matchedClaim) {
+            isClaim = true;
+            // Display claim details directly since claims can't be replayed as execution chains
+            console.log(`\nClaim: ${matchedClaim.intent.plannedAction} ${matchedClaim.intent.plannedTarget} (${matchedClaim.id.slice(0, 9)}...)`);
+            console.log(`  Goal: ${matchedClaim.intent.goal}`);
+            console.log(`  Risk: ${matchedClaim.intent.selfAssessedRisk}/10`);
+            console.log(`  Expected: ${matchedClaim.intent.expectedOutcome}`);
+            console.log(`  Time: ${formatTs(matchedClaim.ts)}`);
+            console.log(`\n${icons.info} This is a claim (declared intent), not an execution entry.`);
+            console.log(`  Claims represent what the agent planned to do. Use 'agenttrust log' to find the corresponding execution.`);
+            return;
+          }
+        }
         if (!targetEntry) {
           console.error(`${icons.fail} Entry not found: ${targetEntryId}`);
           process.exitCode = 1;

@@ -16,15 +16,31 @@ export function registerVerifyCommand(program: Command): void {
 
       const start = Date.now();
       const report = await ledger.verify();
+      const claimsReport = await ledger.verifyClaims();
       const elapsed = Date.now() - start;
+
+      const combinedValid = report.valid && claimsReport.valid;
+      const combinedErrors = [...report.errors, ...claimsReport.errors];
 
       if (opts.json) {
         const json: Record<string, unknown> = {
-          valid: report.valid,
-          filesChecked: report.filesChecked,
-          totalEntries: report.totalEntries,
-          errors: report.errors,
+          valid: combinedValid,
+          filesChecked: report.filesChecked + claimsReport.filesChecked,
+          totalEntries: report.totalEntries + claimsReport.totalEntries,
+          errors: combinedErrors,
           elapsed,
+          ledger: {
+            valid: report.valid,
+            filesChecked: report.filesChecked,
+            totalEntries: report.totalEntries,
+            errors: report.errors,
+          },
+          claims: {
+            valid: claimsReport.valid,
+            filesChecked: claimsReport.filesChecked,
+            totalEntries: claimsReport.totalEntries,
+            errors: claimsReport.errors,
+          },
         };
         if (opts.deep) {
           const stats = await ledger.getStats();
@@ -32,7 +48,15 @@ export function registerVerifyCommand(program: Command): void {
         }
         console.log(JSON.stringify(json, null, 2));
       } else {
-        console.log(formatIntegrityTable(report));
+        console.log(formatIntegrityTable({
+          valid: combinedValid,
+          filesChecked: report.filesChecked + claimsReport.filesChecked,
+          totalEntries: report.totalEntries + claimsReport.totalEntries,
+          errors: combinedErrors,
+        }));
+        if (claimsReport.filesChecked > 0) {
+          console.log(`  Claims: ${claimsReport.filesChecked} file(s), ${claimsReport.totalEntries} entries`);
+        }
         console.log(`\nCompleted in ${elapsed}ms`);
 
         if (opts.deep) {
@@ -42,6 +66,6 @@ export function registerVerifyCommand(program: Command): void {
         }
       }
 
-      if (!report.valid) process.exitCode = 1;
+      if (!combinedValid) process.exitCode = 1;
     });
 }

@@ -101,12 +101,12 @@ export function registerDoctorCommand(program: Command): void {
         });
       }
 
-      // Check 6: ledger files exist
+      // Check 6: ledger files exist (empty is OK on fresh workspace)
       const filesResult = await listLedgerFiles({ ledgerDir });
       if (filesResult.ok) {
         checks.push({
           label: "Ledger files found",
-          pass: filesResult.value.length > 0,
+          pass: true,
           detail:
             filesResult.value.length > 0
               ? `${filesResult.value.length} file(s)`
@@ -114,12 +114,12 @@ export function registerDoctorCommand(program: Command): void {
         });
       }
 
-      // Check 5: claims files
+      // Check 7: claims files (empty is OK on fresh workspace)
       const claimFilesResult = await listClaimFiles({ claimsDir });
       if (claimFilesResult.ok) {
         checks.push({
           label: "Claim files found",
-          pass: claimFilesResult.value.length > 0,
+          pass: true,
           detail:
             claimFilesResult.value.length > 0
               ? `${claimFilesResult.value.length} file(s)`

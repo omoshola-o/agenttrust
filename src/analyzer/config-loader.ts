@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parse as parseYaml } from "yaml";
@@ -19,8 +19,10 @@ interface YamlRuleConfig {
 
 function getConfigsDir(): string {
   const thisFile = fileURLToPath(import.meta.url);
-  // Go from src/analyzer/ up to project root, then into configs/
-  return join(dirname(thisFile), "..", "..", "configs");
+  // From src/analyzer/ -> 2 levels up; from dist/src/analyzer/ -> 3 levels up
+  const fromSrc = join(dirname(thisFile), "..", "..", "configs");
+  if (existsSync(fromSrc)) return fromSrc;
+  return join(dirname(thisFile), "..", "..", "..", "configs");
 }
 
 export function loadRuleConfig(path: string): RuleEngineConfig {

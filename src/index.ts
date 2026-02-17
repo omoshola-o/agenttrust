@@ -14,7 +14,7 @@ export type { ChainVerification } from "./ledger/hash-chain.js";
 export type { StorageConfig, StorageResult } from "./ledger/storage.js";
 
 // Integrity
-export { verifyFile, verifyAll } from "./ledger/integrity.js";
+export { verifyFile, verifyAll, verifyClaimFile, verifyAllClaims } from "./ledger/integrity.js";
 export type { IntegrityReport, IntegrityError } from "./ledger/integrity.js";
 
 // Schema

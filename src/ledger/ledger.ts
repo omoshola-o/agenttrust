@@ -10,7 +10,7 @@ import {
   getLastEntry,
   ensureLedgerDir,
 } from "./storage.js";
-import { verifyAll } from "./integrity.js";
+import { verifyAll, verifyAllClaims } from "./integrity.js";
 import type { IntegrityReport } from "./integrity.js";
 import type { QueryFilters } from "../query/filters.js";
 import { applyFilters, getRelevantFiles } from "../query/filters.js";
@@ -150,6 +150,11 @@ export class Ledger {
     return verifyAll(config.ledgerDir);
   }
 
+  async verifyClaims(): Promise<IntegrityReport> {
+    const config = await this.getClaimsStorageConfig();
+    return verifyAllClaims(config.claimsDir);
+  }
+
   async getStats(): Promise<LedgerStats> {
     const config = await this.getStorageConfig();
     const readResult = await this.read();
@@ -228,6 +233,13 @@ export class Ledger {
       }
       if (filters?.session) {
         filtered = filtered.filter((c) => c.session === filters.session);
+      }
+      if (filters?.actionTypes && filters.actionTypes.length > 0) {
+        const typeSet = new Set(filters.actionTypes);
+        filtered = filtered.filter((c) => typeSet.has(c.intent.plannedAction));
+      }
+      if (filters?.riskScoreMin !== undefined) {
+        filtered = filtered.filter((c) => c.intent.selfAssessedRisk >= filters.riskScoreMin!);
       }
 
       return { ok: true, value: filtered };

@@ -164,7 +164,11 @@ export function registerWitnessCommand(program: Command): void {
 
         const files = await listWitnessFiles(storageConfig);
         if (!files.ok || files.value.length === 0) {
-          console.log(`${icons.info} No witness events found.`);
+          if (opts.json) {
+            console.log("[]");
+          } else {
+            console.log(`${icons.info} No witness events found.`);
+          }
           return;
         }
 

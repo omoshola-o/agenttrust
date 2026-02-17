@@ -47,8 +47,18 @@ export function registerConsistencyCommand(program: Command): void {
         }
 
         if (claimsResult.value.length === 0 && execResult.value.length === 0) {
-          console.log(`${icons.info} No claims or executions found in the last ${opts.last}.`);
-          console.log(`  Use 'agenttrust log' to check activity or 'agenttrust claim' to declare intent.`);
+          if (opts.json) {
+            console.log(JSON.stringify({
+              period: opts.last,
+              claims: 0,
+              executions: 0,
+              consistencyScore: 100,
+              findings: [],
+            }, null, 2));
+          } else {
+            console.log(`${icons.info} No claims or executions found in the last ${opts.last}.`);
+            console.log(`  Use 'agenttrust log' to check activity or 'agenttrust claim' to declare intent.`);
+          }
           return;
         }
 

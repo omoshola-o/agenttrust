@@ -73,7 +73,17 @@ export function registerCorrelateCommand(program: Command): void {
         const executions = execResult.ok ? execResult.value : [];
 
         if (witnessEntries.length === 0 && executions.length === 0) {
-          console.log(`${icons.info} No witness events or execution entries in the specified range.`);
+          if (opts.json) {
+            console.log(JSON.stringify({
+              witnessEvents: 0,
+              executionEntries: 0,
+              matches: [],
+              findings: [],
+              confidence: 100,
+            }, null, 2));
+          } else {
+            console.log(`${icons.info} No witness events or execution entries in the specified range.`);
+          }
           return;
         }
 

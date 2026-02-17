@@ -19,7 +19,7 @@ export interface QueryFilters {
   riskLabels?: RiskLabel[];
 }
 
-const TIME_PATTERN = /^(\d+)(h|d|w)$/;
+const TIME_PATTERN = /^(\d+)(m|h|d|w)$/;
 
 export function parseTimeRange(input: string): TimeRange | null {
   const match = TIME_PATTERN.exec(input);
@@ -32,6 +32,9 @@ export function parseTimeRange(input: string): TimeRange | null {
   let ms: number;
 
   switch (unit) {
+    case "m":
+      ms = amount * 60 * 1000;
+      break;
     case "h":
       ms = amount * 60 * 60 * 1000;
       break;
